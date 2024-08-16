@@ -9,6 +9,7 @@ class GildedRoseTest {
     private static final String AGED_BRIE = "Aged Brie";
     private static final String BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert";
     private static final String SULFURAS = "Sulfuras, Hand of Ragnaros";
+    private static final String CONJURED = "Conjured Mana Cake";
 
     @Test
     void testNormalItemBeforeSellDate() {
@@ -190,4 +191,41 @@ class GildedRoseTest {
         assertEquals(-2, items[0].sellIn);
         assertEquals(0, items[0].quality);
     }
+
+    @Test
+    void testConjuredItemBeforeSellDate() {
+        Item[] items = new Item[] { new Item(CONJURED, 10, 20) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(9, items[0].sellIn);
+        assertEquals(18, items[0].quality);
+    }
+
+    @Test
+    void testConjuredItemOnSellDate() {
+        Item[] items = new Item[] { new Item(CONJURED, 0, 20) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(-1, items[0].sellIn);
+        assertEquals(16, items[0].quality);
+    }
+
+    @Test
+    void testConjuredItemAfterSellDate() {
+        Item[] items = new Item[] { new Item(CONJURED, -1, 20) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(-2, items[0].sellIn);
+        assertEquals(16, items[0].quality);
+    }
+
+    @Test
+    void testConjuredItemWithZeroQuality() {
+        Item[] items = new Item[] { new Item(CONJURED, 10, 0) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(9, items[0].sellIn);
+        assertEquals(0, items[0].quality);
+    }
+
 }
